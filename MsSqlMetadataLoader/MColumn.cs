@@ -158,7 +158,7 @@ namespace MsSqlMetadataLoader
             TableKey = $"{table_catalog}.{table_schema}.{table_name}";
         }
 
-        internal void CopyFrom(MColumn c)
+        public void CopyFrom(MColumn c)
         {
             table_catalog = c.table_catalog;
             table_schema = c.table_schema;

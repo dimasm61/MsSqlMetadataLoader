@@ -21,8 +21,6 @@ namespace MsSqlMetadataLoader
 
         public override string ToString() => $"{Table_schema}.{Table_name}";
 
-        public readonly MAttrTable TableAttr = new MAttrTable();
-
         public MTable()
         {
 
@@ -41,14 +39,12 @@ namespace MsSqlMetadataLoader
             Table_type = dataRow["table_type"]?.ToString();
         }
 
-        internal void CopyFrom(MTable t)
+        public void CopyFrom(MTable t)
         {
             Table_catalog = t.Table_catalog;
             Table_schema = t.Table_schema;
             Table_name = t.Table_name;
             Table_type = t.Table_type;
-
-            TableAttr.CopyFrom(t.TableAttr);
 
             ColumnList.Clear();
             FkList.Clear();

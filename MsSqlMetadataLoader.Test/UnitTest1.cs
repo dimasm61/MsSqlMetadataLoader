@@ -10,8 +10,10 @@ namespace MsSqlMetadataLoader.Test
         }
 
         [Test]
-        public void Test1()
+        public void LoadMetadataTest()
         {
+            var dbMeta = DbMsSqlMetadata.Load("Server=localhost\\EX2017;Database=VTSDB3;Trusted_Connection=True;", 0.1);
+ 
             Assert.Pass();
         }
     }
