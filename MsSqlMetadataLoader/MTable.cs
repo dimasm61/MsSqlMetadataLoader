@@ -6,6 +6,11 @@ namespace MsSqlMetadataLoader
 {
     public class MTable
     {
+        /// <summary>
+        /// Field for extend of storage
+        /// </summary>
+        public object Tag;
+
         public string TableKey => $"{Table_catalog}.{Table_schema}.{Table_name}";
 
         public string Table_catalog;// String	Catalog of the table.

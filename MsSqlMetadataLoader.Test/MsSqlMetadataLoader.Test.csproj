@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="UseExample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UseExample.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
@@ -14,6 +22,25 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MsSqlMetadataLoader\MsSqlMetadataLoader.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="UseExample.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>UseExample.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="UseExample.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UseExample.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

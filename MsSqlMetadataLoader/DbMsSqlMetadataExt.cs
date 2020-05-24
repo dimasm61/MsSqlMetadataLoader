@@ -12,7 +12,7 @@ namespace MsSqlMetadataLoader
         /// </summary>
         /// <param name="db"></param>
         /// <param name="arg">'+' - include schema, '-' - exclude schema</param>
-        /// <param name="schemeArray">перечень схем</param>
+        /// <param name="schemeArray">array of schemas</param>
         /// <returns></returns>
         public static DbMsSqlMetadata FilterByScheme(this DbMsSqlMetadata db, string arg, params string[] schemeArray)
         {
@@ -29,7 +29,6 @@ namespace MsSqlMetadataLoader
                     }
 
                 } // for
-
             }
 
             if (string.Equals(arg, "-"))
@@ -98,6 +97,13 @@ namespace MsSqlMetadataLoader
             return db;
         }
 
+        /// <summary>
+        /// Filter by table, with output funcfion (for debug info)
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="arg">'+' - include table, '-' - exclude table</param>
+        /// <param name="tableArray">array of tables 'schema.table' ('app.AppUser')</param>
+        /// <returns></returns>
         public static DbMsSqlMetadata FilterByTable(this DbMsSqlMetadata db, string arg, Action<string> outputWriteFunc, params string[] tableArray)
         {
             if (string.Equals(arg, "+"))
@@ -110,6 +116,7 @@ namespace MsSqlMetadataLoader
 
                     if (!tableArray.Contains(tName))
                     {
+                        // debuf info
                         outputWriteFunc?.Invoke($"// - remove table {tName}");
                         db.TableList.RemoveAt(i);
                         i--;

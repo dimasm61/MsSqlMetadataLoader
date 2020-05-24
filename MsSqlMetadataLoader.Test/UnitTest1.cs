@@ -16,5 +16,11 @@ namespace MsSqlMetadataLoader.Test
  
             Assert.Pass();
         }
+
+        [Test]
+        public void LoadWithWripper()
+        {
+            var dbMeta = MyProjectDbMetadataWripper.Load();
+        }
     }
 }

@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>0.0.0.1</Version>
+    <Description>Sql server metadata loader (talbles/columns). Metadata can use for T4 class generator.
+Example of use: https://github.com/dimasm61/MsSqlMetadataLoader/blob/master/MsSqlMetadataLoader.Test/UnitTest1.cs</Description>
+    <Copyright>Unlicense</Copyright>
+    <Authors>Dimasm61</Authors>
+    <Company>-</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/dimasm61/MsSqlMetadataLoader</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dimasm61/MsSqlMetadataLoader</RepositoryUrl>
+    <PackageReleaseNotes>init</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

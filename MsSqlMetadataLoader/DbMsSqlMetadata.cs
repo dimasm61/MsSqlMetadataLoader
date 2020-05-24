@@ -10,7 +10,7 @@ namespace MsSqlMetadataLoader
 {
     public class DbMsSqlMetadata
     {
-        private static DateTime _lastLoadMetadata = DateTime.MinValue;
+        //private static DateTime _lastLoadMetadata = DateTime.MinValue;
 
         private static List<MTable> _tableList = new List<MTable>();
         private static DateTime _tableListCreateTime = DateTime.MinValue;
