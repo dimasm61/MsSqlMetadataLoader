@@ -9,6 +9,13 @@ namespace MsSqlMetadataLoader
 {
     public class DbItemCommon
     {
+        /// <summary>
+        /// Field for extend of storage
+        /// </summary>
+        public object Tag;
+
+        public T GetTag<T>() => (T)Tag;
+
         protected void ToStr(DataRow reader, string colName, ref string outResult)
         {
             if (reader[colName.Trim()] == DBNull.Value)

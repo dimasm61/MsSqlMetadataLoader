@@ -28,7 +28,12 @@ namespace MsSqlMetadataLoader.Test2
             {
                 //TableAddAttributes - custom class
                 t.Tag = new TableAddAttributes();
-                ((TableAddAttributes)t.Tag).AddAttrList.Add("[PropGridAttr]");
+                t.GetTag<TableAddAttributes>().AddAttrList.Add("[PropGridAttr]");
+
+                t.ColumnList.ForEach(c => {
+                    c.Tag = new ColumnAddAttributes();
+                    c.GetTag<ColumnAddAttributes>().AddAttrList.Add("[ColGridAttr]");
+                });
             });
 
             return meta;
@@ -84,6 +89,11 @@ namespace MsSqlMetadataLoader.Test2
     /// Class example with some extended data
     /// </summary>
     public class TableAddAttributes
+    {
+        public List<string> AddAttrList = new List<string>();
+    }
+
+    public class ColumnAddAttributes
     {
         public List<string> AddAttrList = new List<string>();
     }

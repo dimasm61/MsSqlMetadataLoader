@@ -4,12 +4,8 @@ using System.Text;
 
 namespace MsSqlMetadataLoader
 {
-    public class MTable
+    public class MTable: DbItemCommon
     {
-        /// <summary>
-        /// Field for extend of storage
-        /// </summary>
-        public object Tag;
 
         public string TableKey => $"{Table_catalog}.{Table_schema}.{Table_name}";
 

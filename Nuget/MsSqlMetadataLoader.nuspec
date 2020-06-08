@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>MsSqlMetadataLoader</id>
-        <version>0.0.0.2</version>
+        <version>0.0.0.3</version>
         <title>MsSqlMetadataLoader</title>
         <authors>dimasm61</authors>
         <owners>dimasm61</owners>
@@ -12,7 +12,8 @@
         <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Sql server metadata loader (talbles/columns). Metadata can use for T4 class generator</description>
-        <releaseNotes> Bugs fixed. Ignoring duplicate files. Example of use: https://github.com/dimasm61/MsSqlMetadataLoader/blob/master/MsSqlMetadataLoader.Test2/MyProjectDbMetadataWripper.cs
+        <releaseNotes>
+            Improvement of Tag property. Example of use: https://github.com/dimasm61/MsSqlMetadataLoader/blob/master/MsSqlMetadataLoader.Test2/MyProjectDbMetadataWripper.cs
         </releaseNotes>
         <copyright>free</copyright>
         <tags>mssql T4</tags>
