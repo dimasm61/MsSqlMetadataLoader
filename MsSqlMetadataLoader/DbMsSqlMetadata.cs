@@ -17,76 +17,83 @@ namespace MsSqlMetadataLoader
 
         public List<MTable> TableList = new List<MTable>();
 
+        private static object _lck = new object();
+
         /// <summary>
         /// <example> var db1 = DbMetadata.Load().FilterByScheme("+", "nav", "usr").FilterByTable("+","nav.Pass","usr.Watch"); </example>
         /// </summary>
         /// <returns></returns>
         public static DbMsSqlMetadata Load(string connStr, double minTimeOut = 1)
         {
-            var sw = Stopwatch.StartNew();
-
             var result = new DbMsSqlMetadata();
-
-            if (_tableList.Any() && (DateTime.Now - _tableListCreateTime).TotalSeconds < minTimeOut * 60)
+            lock (_lck)
             {
-                CopyTableList(ref _tableList, ref result.TableList);
-                return result;
-            }
+                var sw = Stopwatch.StartNew();
 
-            using (var conn = new SqlConnection(connStr))
-            {
-                conn.Open();
 
-                // tables
-                var tables = conn.GetSchema("Tables", new string[] { null, null, null, null });
-                var tableList = tables.AsEnumerable().Select(c => new MTable(c)).ToList();
 
-                // columns
-                var columns = conn.GetSchema("Columns", new string[] { null, null, null });
-                var columnList = columns.AsEnumerable().Select(c => new MColumn(c)).ToList();
-
-                // indexes
-                var idxColumns = conn.GetSchema("IndexColumns", new string[] { null, null, null });
-                var idxList = idxColumns.AsEnumerable().Select(c => new MIndex(c)).ToList();
-
-                // constraints
-                var foreignKeys = conn.GetSchema("ForeignKeys", new string[] { null, null, null, null });
-                var fkList = foreignKeys.AsEnumerable().Select(c => new MForeignKey(c)).ToList();
-
-                // column descriptions
-                var commentList = GetColumnComments(conn);
-
-                // set comments into columns
-                foreach (var cm in commentList)
+                if (_tableList.Any() && (DateTime.Now - _tableListCreateTime).TotalSeconds < minTimeOut * 60)
                 {
-                    var col = columnList.FirstOrDefault(c => c.TableKey == cm.TableKey && c.column_name == cm.column_name);
-                    if (col != null)
-                        col.Comment = cm.comment;
+                    CopyTableList(ref _tableList, ref result.TableList);
+                    return result;
                 }
 
-                Action<MTable> funcTable = (t) => {
+                using (var conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
 
-                    result.TableList.Add(t);
+                    // tables
+                    var tables = conn.GetSchema("Tables", new string[] { null, null, null, null });
+                    var tableList = tables.AsEnumerable().Select(c => new MTable(c)).ToList();
 
-                    t.ColumnList.AddRange(columnList.Where(c => c.TableKey == t.TableKey));
+                    // columns
+                    var columns = conn.GetSchema("Columns", new string[] { null, null, null });
+                    var columnList = columns.AsEnumerable().Select(c => new MColumn(c)).ToList();
 
-                    t.IdxList.AddRange(idxList.Where(c => c.TableKey == t.TableKey));
+                    // indexes
+                    var idxColumns = conn.GetSchema("IndexColumns", new string[] { null, null, null });
+                    var idxList = idxColumns.AsEnumerable().Select(c => new MIndex(c)).ToList();
 
-                    t.FkList.AddRange(fkList.Where(c => c.TableKey == t.TableKey));
+                    // constraints
+                    var foreignKeys = conn.GetSchema("ForeignKeys", new string[] { null, null, null, null });
+                    var fkList = foreignKeys.AsEnumerable().Select(c => new MForeignKey(c)).ToList();
 
-                    var pkCol = t.ColumnList.FirstOrDefault(c => c.ordinal_position == 1);
-                    if (pkCol != null)
-                        pkCol.IsPrimaryKey = true;
+                    // column descriptions
+                    var commentList = GetColumnComments(conn);
 
-                };
+                    // set comments into columns
+                    foreach (var cm in commentList)
+                    {
+                        var col = columnList.FirstOrDefault(c => c.TableKey == cm.TableKey && c.column_name == cm.column_name);
+                        if (col != null)
+                            col.Comment = cm.comment;
+                    }
 
-                Parallel.ForEach(tableList, funcTable);
+                    Action<MTable> funcTable = (t) =>
+                    {
 
-            }// using
+                        result.TableList.Add(t);
 
-            CopyTableList(ref result.TableList, ref _tableList);
-            _tableListCreateTime = DateTime.Now;
-            sw.Stop();
+                        t.ColumnList.AddRange(columnList.Where(c => c.TableKey == t.TableKey));
+
+                        t.IdxList.AddRange(idxList.Where(c => c.TableKey == t.TableKey));
+
+                        t.FkList.AddRange(fkList.Where(c => c.TableKey == t.TableKey));
+
+                        var pkCol = t.ColumnList.FirstOrDefault(c => c.ordinal_position == 1);
+                        if (pkCol != null)
+                            pkCol.IsPrimaryKey = true;
+
+                    };
+
+                    Parallel.ForEach(tableList, funcTable);
+
+                }// using
+
+                CopyTableList(ref result.TableList, ref _tableList);
+                _tableListCreateTime = DateTime.Now;
+                sw.Stop();
+            }
             return result;
         }
 
@@ -106,8 +113,6 @@ namespace MsSqlMetadataLoader
             var cmd = new SqlCommand(getCommentSql, conn);
             var reader = cmd.ExecuteReader();
 
-
-
             while (reader.Read())
                 commentList.Add(new CommentInfo(reader));
 
@@ -118,10 +123,10 @@ namespace MsSqlMetadataLoader
         {
             public string TableKey;
 
-            public String table_catalog;//String  Catalog of the table.
-            public String table_schema;//String  Schema that contains the table.
-            public String table_name;//String  Table name.
-            public String column_name;//String  Column name.
+            public string table_catalog;//String  Catalog of the table.
+            public string table_schema;//String  Schema that contains the table.
+            public string table_name;//String  Table name.
+            public string column_name;//String  Column name.
             public string comment;
 
             public CommentInfo(IDataReader dataReader)

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MsSqlMetadataLoader
 {
-    public class MColumn
+    public class MColumn: DbItemCommon
     {
         public string TableKey;
 
@@ -26,17 +26,17 @@ namespace MsSqlMetadataLoader
         /// <summary>String,  System - supplied data type.</summary>
         public string data_type;
         /// <summary>Int32,   Maximum length, in characters, for binary data, character data, or text and image data.Otherwise, NULL is returned.</summary>
-        public int character_maximum_length;
+        public Int32? character_maximum_length;
         /// <summary>Int32,   Maximum length, in bytes, for binary data, character data, or text and image data.Otherwise, NULL is returned.</summary>
-        public int character_octet_length;
+        public Int32? character_octet_length;
         /// <summary>Unsigned Byte,   Precision of approximate numeric data, exact numeric data, integer data, or monetary data.Otherwise, NULL is returned.</summary>
-        public int numeric_precision;
+        public byte? numeric_precision;
         /// <summary>Int16,   Precision radix of approximate numeric data, exact numeric data, integer data, or monetary data.Otherwise, NULL is returned.</summary>
-        public int numeric_precision_radix;
+        public Int16? numeric_precision_radix;
         /// <summary>Int32,   Scale of approximate numeric data, exact numeric data, integer data, or monetary data.Otherwise, NULL is returned.</summary>
-        public int numeric_scale;
+        public Int32? numeric_scale;
         /// <summary>Int16,   Subtype code for datetime and SQL - 92 interval data types.For other data types, NULL is returned.</summary>
-        public int datetime_precision;
+        public Int16? datetime_precision;
         /// <summary>String,  Returns master, indicating the database in which the character set is located, if the column is character data or text data type. Otherwise, NULL is returned.</summary>
         public string character_set_catalog;
         /// <summary>String,  Always returns NULL.</summary>
@@ -46,7 +46,7 @@ namespace MsSqlMetadataLoader
         /// <summary>String,  Returns master, indicating the database in which the collation is defined, if the column is character data or text data type. Otherwise, this column is NULL.</summary>
         public string collation_catalog;
         /// <summary>String,  YES if the column has FILESTREAM attribute.</summary>
-        public string is_filestream;
+        public bool is_filestream;
 
         public bool IsPrimaryKey;
         public string Comment;
@@ -73,57 +73,57 @@ namespace MsSqlMetadataLoader
 
         public MColumn(System.Data.DataRow dataRow)
         {
-            table_catalog = dataRow["table_catalog"]?.ToString();//String  
-            table_schema = dataRow["table_schema"]?.ToString();//String  
-            table_name = dataRow["table_name"]?.ToString();//String  
-            column_name = dataRow["column_name"]?.ToString();//String  
-            ordinal_position = (int)dataRow["ordinal_position"];//Int16   
-            column_default = dataRow["column_default"]?.ToString();//String  
-            is_nullable = dataRow["is_nullable"]?.ToString();//String N
-            data_type = dataRow["data_type"]?.ToString();//String  
-            character_maximum_length = (dataRow["character_maximum_length"] is int a1) ? a1 : 0;//Int32   
-            character_octet_length = (dataRow["character_octet_length"] is int a2) ? a2 : 0;//Int32   
-            numeric_precision = (dataRow["numeric_precision"] is int a3) ? a3 : 0;//Unsigned
-            numeric_precision_radix = (dataRow["numeric_precision_radix"] is int a4) ? a4 : 0;//Int16   
-            numeric_scale = (dataRow["numeric_scale"] is int a5) ? a5 : 0;//Int32   
-            datetime_precision = (dataRow["datetime_precision"] is int a6) ? a6 : 0;//Int16   
-            character_set_catalog = dataRow["character_set_catalog"]?.ToString();//String  
-            character_set_schema = dataRow["character_set_schema"]?.ToString();//String  
-            character_set_name = dataRow["character_set_name"]?.ToString();//String  
-            collation_catalog = dataRow["collation_catalog"]?.ToString();//String  
-            is_filestream = dataRow["is_filestream"]?.ToString();//String  
+            ToStr(dataRow, "table_catalog            ", ref table_catalog); //  String  
+            ToStr(dataRow, "table_schema             ", ref table_schema); //  String  
+            ToStr(dataRow, "table_name               ", ref table_name); //  String  
+            ToStr(dataRow, "column_name              ", ref column_name); //  String  
+            ToInt(dataRow, "ordinal_position         ", ref ordinal_position); //  Int16   
+            ToStr(dataRow, "column_default           ", ref column_default); //  String  
+            ToStr(dataRow, "is_nullable              ", ref is_nullable); //  String N
+            ToStr(dataRow, "data_type                ", ref data_type); //  String  
+            ToInt(dataRow, "character_maximum_length ", ref character_maximum_length); //  Int32   
+            ToInt(dataRow, "character_octet_length   ", ref character_octet_length); //  Int32   
+            ToInt(dataRow, "numeric_precision        ", ref numeric_precision); //  Unsigned
+            ToInt(dataRow, "numeric_precision_radix  ", ref numeric_precision_radix); //  Int16   
+            ToInt(dataRow, "numeric_scale            ", ref numeric_scale); //  Int32   
+            ToInt(dataRow, "datetime_precision       ", ref datetime_precision); //  Int16   
+            ToStr(dataRow, "character_set_catalog    ", ref character_set_catalog); //  String  
+            ToStr(dataRow, "character_set_schema     ", ref character_set_schema); //  String  
+            ToStr(dataRow, "character_set_name       ", ref character_set_name); //  String  
+            ToStr(dataRow, "collation_catalog        ", ref collation_catalog); //  String  
+            ToInt(dataRow, "is_filestream            ", ref is_filestream); //  String  
 
             switch (data_type)
             {
-                case "image": PropType = "byte[]"; DbType = DbType.Binary; SqlDbType = SqlDbType.Image; break;
-                case "text": PropType = "string"; DbType = DbType.String; SqlDbType = SqlDbType.Text; break;
-                case "binary": PropType = "byte[]"; DbType = DbType.Binary; SqlDbType = SqlDbType.Binary; break;
-                case "tinyint": PropType = "byte"; DbType = DbType.Byte; SqlDbType = SqlDbType.TinyInt; break;
-                case "date": PropType = "DateTime"; DbType = DbType.Date; SqlDbType = SqlDbType.Date; break;
-                case "time": PropType = "DateTime"; DbType = DbType.Time; SqlDbType = SqlDbType.Time; break;
-                case "bit": PropType = "bool"; DbType = DbType.Boolean; SqlDbType = SqlDbType.Bit; break;
-                case "smallint": PropType = "short"; DbType = DbType.Int16; SqlDbType = SqlDbType.SmallInt; break;
-                case "decimal": PropType = "decimal"; DbType = DbType.Decimal; SqlDbType = SqlDbType.Decimal; break;
-                case "int": PropType = "int"; DbType = DbType.Int32; SqlDbType = SqlDbType.Int; break;
-                case "smalldatetime": PropType = "DateTime"; DbType = DbType.DateTime; SqlDbType = SqlDbType.SmallDateTime; break;
-                case "real": PropType = "float"; DbType = DbType.Single; SqlDbType = SqlDbType.Real; break;
-                case "money": PropType = "decimal"; DbType = DbType.Currency; SqlDbType = SqlDbType.Money; break;
-                case "datetime": PropType = "DateTime"; DbType = DbType.DateTime; SqlDbType = SqlDbType.DateTime; break;
-                case "float": PropType = "double"; DbType = DbType.Double; SqlDbType = SqlDbType.Float; break;
-                case "numeric": PropType = "double"; DbType = DbType.Decimal; SqlDbType = SqlDbType.Decimal; break;
-                case "smallmoney": PropType = "decimal"; DbType = DbType.Currency; SqlDbType = SqlDbType.SmallMoney; break;
-                case "datetime2": PropType = "DateTime"; DbType = DbType.DateTime2; SqlDbType = SqlDbType.DateTime2; break;
-                case "bigint": PropType = "long"; DbType = DbType.Int64; SqlDbType = SqlDbType.BigInt; break;
-                case "varbinary": PropType = "byte[]"; DbType = DbType.Binary; SqlDbType = SqlDbType.VarBinary; break;
-                case "timestamp": PropType = "byte[]"; DbType = DbType.Binary; SqlDbType = SqlDbType.Timestamp; break;
-                case "sysname": PropType = "string"; DbType = DbType.String; SqlDbType = SqlDbType.NVarChar; break;
-                case "nvarchar": PropType = "string"; DbType = DbType.String; SqlDbType = SqlDbType.NVarChar; break;
-                case "varchar": PropType = "string"; DbType = DbType.AnsiString; SqlDbType = SqlDbType.VarChar; break;
-                case "ntext": PropType = "string"; DbType = DbType.String; SqlDbType = SqlDbType.NText; break;
-                case "uniqueidentifier": PropType = "Guid"; DbType = DbType.Binary; SqlDbType = SqlDbType.UniqueIdentifier; break;
-                case "datetimeoffset": PropType = "DateTimeOffset"; DbType = DbType.DateTimeOffset; SqlDbType = SqlDbType.DateTimeOffset; break;
-                case "sql_variant": PropType = "object"; DbType = DbType.Binary; SqlDbType = SqlDbType.Variant; break;
-                case "xml": PropType = "string"; DbType = DbType.Xml; SqlDbType = SqlDbType.Xml; break;
+                case "image"           : PropType = "byte[]"        ; DbType = DbType.Binary; SqlDbType = SqlDbType.Image; break;
+                case "text"            : PropType = "string"        ; DbType = DbType.String; SqlDbType = SqlDbType.Text; break;
+                case "binary"          : PropType = "byte[]"        ; DbType = DbType.Binary; SqlDbType = SqlDbType.Binary; break;
+                case "tinyint"         : PropType = "byte"          ; DbType = DbType.Byte; SqlDbType = SqlDbType.TinyInt; break;
+                case "date"            : PropType = "DateTime"      ; DbType = DbType.Date; SqlDbType = SqlDbType.Date; break;
+                case "time"            : PropType = "DateTime"      ; DbType = DbType.Time; SqlDbType = SqlDbType.Time; break;
+                case "bit"             : PropType = "bool"          ; DbType = DbType.Boolean; SqlDbType = SqlDbType.Bit; break;
+                case "smallint"        : PropType = "short"         ; DbType = DbType.Int16; SqlDbType = SqlDbType.SmallInt; break;
+                case "decimal"         : PropType = "decimal"       ; DbType = DbType.Decimal; SqlDbType = SqlDbType.Decimal; break;
+                case "int"             : PropType = "int"           ; DbType = DbType.Int32; SqlDbType = SqlDbType.Int; break;
+                case "smalldatetime"   : PropType = "DateTime"      ; DbType = DbType.DateTime; SqlDbType = SqlDbType.SmallDateTime; break;
+                case "real"            : PropType = "float"         ; DbType = DbType.Single; SqlDbType = SqlDbType.Real; break;
+                case "money"           : PropType = "decimal"       ; DbType = DbType.Currency; SqlDbType = SqlDbType.Money; break;
+                case "datetime"        : PropType = "DateTime"      ; DbType = DbType.DateTime; SqlDbType = SqlDbType.DateTime; break;
+                case "float"           : PropType = "double"        ; DbType = DbType.Double; SqlDbType = SqlDbType.Float; break;
+                case "numeric"         : PropType = "double"        ; DbType = DbType.Decimal; SqlDbType = SqlDbType.Decimal; break;
+                case "smallmoney"      : PropType = "decimal"       ; DbType = DbType.Currency; SqlDbType = SqlDbType.SmallMoney; break;
+                case "datetime2"       : PropType = "DateTime"      ; DbType = DbType.DateTime2; SqlDbType = SqlDbType.DateTime2; break;
+                case "bigint"          : PropType = "long"          ; DbType = DbType.Int64; SqlDbType = SqlDbType.BigInt; break;
+                case "varbinary"       : PropType = "byte[]"        ; DbType = DbType.Binary; SqlDbType = SqlDbType.VarBinary; break;
+                case "timestamp"       : PropType = "byte[]"        ; DbType = DbType.Binary; SqlDbType = SqlDbType.Timestamp; break;
+                case "sysname"         : PropType = "string"        ; DbType = DbType.String; SqlDbType = SqlDbType.NVarChar; break;
+                case "nvarchar"        : PropType = "string"        ; DbType = DbType.String; SqlDbType = SqlDbType.NVarChar; break;
+                case "varchar"         : PropType = "string"        ; DbType = DbType.AnsiString; SqlDbType = SqlDbType.VarChar; break;
+                case "ntext"           : PropType = "string"        ; DbType = DbType.String; SqlDbType = SqlDbType.NText; break;
+                case "uniqueidentifier": PropType = "Guid"          ; DbType = DbType.Binary; SqlDbType = SqlDbType.UniqueIdentifier; break;
+                case "datetimeoffset"  : PropType = "DateTimeOffset"; DbType = DbType.DateTimeOffset; SqlDbType = SqlDbType.DateTimeOffset; break;
+                case "sql_variant"     : PropType = "object"        ; DbType = DbType.Binary; SqlDbType = SqlDbType.Variant; break;
+                case "xml"             : PropType = "string"        ; DbType = DbType.Xml; SqlDbType = SqlDbType.Xml; break;
 
                 case "char":
                     PropType = character_maximum_length == 1 ? "char" : "string";

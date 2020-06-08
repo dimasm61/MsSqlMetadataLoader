@@ -1,6 +1,6 @@
 ﻿namespace MsSqlMetadataLoader
 {
-    public class MIndex
+    public class MIndex: DbItemCommon
     {
         public string TableKey;
 
@@ -28,13 +28,13 @@
 
         public MIndex(System.Data.DataRow dataRow)
         {
-            constraint_catalog = dataRow["constraint_catalog"]?.ToString();
-            constraint_schema = dataRow["constraint_schema"]?.ToString();
-            constraint_name = dataRow["constraint_name"]?.ToString();
-            table_catalog = dataRow["table_catalog"]?.ToString();
-            table_schema = dataRow["table_schema"]?.ToString();
-            table_name = dataRow["table_name"]?.ToString();
-            column_name = dataRow["column_name"]?.ToString();
+            ToStr(dataRow, "constraint_catalog", ref constraint_catalog);
+            ToStr(dataRow, "constraint_schema ", ref constraint_schema );
+            ToStr(dataRow, "constraint_name   ", ref constraint_name   );
+            ToStr(dataRow, "table_catalog     ", ref table_catalog     );
+            ToStr(dataRow, "table_schema      ", ref table_schema      );
+            ToStr(dataRow, "table_name        ", ref table_name        );
+            ToStr(dataRow, "column_name       ", ref column_name       );
 
             TableKey = $"{table_catalog}.{table_schema}.{table_name}";
         }

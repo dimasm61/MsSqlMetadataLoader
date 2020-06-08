@@ -1,0 +1,4 @@
+{
+    "ConnectionString": "Server=localhost\\EX2017;Database=VTSDB3;Trusted_Connection=True;",
+    "ReloadMetadataTimeoutSec": 60
+}
