@@ -54,7 +54,7 @@
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Nuget\lib\net48\" /y
 
-"$(SolutionDir)nuget.exe" pack "$(SolutionDir)Nuget\MsSqlMetadataLoader.nuspec" -Version 0.0.0.3 -OutputDirectory "$(SolutionDir)Nuget"
+"$(SolutionDir)nuget.exe" pack "$(SolutionDir)Nuget\MsSqlMetadataLoader.nuspec" -Version 0.0.0.4 -OutputDirectory "$(SolutionDir)Nuget"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

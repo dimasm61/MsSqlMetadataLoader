@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace MsSqlMetadataLoader
 {
-    public class MTable: DbItemCommon
+    public class MTable : DbItemCommon
     {
 
         public string TableKey => $"{Table_catalog}.{Table_schema}.{Table_name}";
@@ -56,6 +57,11 @@ namespace MsSqlMetadataLoader
             FkList.AddRange(t.FkList.Select(c => new MForeignKey(c)));
 
             IdxList.AddRange(t.IdxList.Select(c => new MIndex(c)));
+
+            if (t.Tag is ICloneable tag)
+            {
+                Tag = tag.Clone();
+            }
 
         }
     }

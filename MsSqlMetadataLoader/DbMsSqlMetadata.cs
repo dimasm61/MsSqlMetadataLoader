@@ -10,14 +10,15 @@ namespace MsSqlMetadataLoader
 {
     public class DbMsSqlMetadata
     {
-        //private static DateTime _lastLoadMetadata = DateTime.MinValue;
-
         private static List<MTable> _tableList = new List<MTable>();
         private static DateTime _tableListCreateTime = DateTime.MinValue;
 
         public List<MTable> TableList = new List<MTable>();
 
-        private static object _lck = new object();
+
+        public DataTable Tables = null;
+
+        private static readonly object _lck = new object();
 
         /// <summary>
         /// <example> var db1 = DbMetadata.Load().FilterByScheme("+", "nav", "usr").FilterByTable("+","nav.Pass","usr.Watch"); </example>
@@ -29,8 +30,6 @@ namespace MsSqlMetadataLoader
             lock (_lck)
             {
                 var sw = Stopwatch.StartNew();
-
-
 
                 if (_tableList.Any() && (DateTime.Now - _tableListCreateTime).TotalSeconds < minTimeOut * 60)
                 {
@@ -45,6 +44,13 @@ namespace MsSqlMetadataLoader
                     // tables
                     var tables = conn.GetSchema("Tables", new string[] { null, null, null, null });
                     var tableList = tables.AsEnumerable().Select(c => new MTable(c)).ToList();
+
+                    if(tables.Rows.Count != tableList.Count)
+                    {
+                        var s = 1;
+                    }
+
+                    result.Tables = tables;
 
                     // columns
                     var columns = conn.GetSchema("Columns", new string[] { null, null, null });
@@ -68,27 +74,38 @@ namespace MsSqlMetadataLoader
                         if (col != null)
                             col.Comment = cm.comment;
                     }
-
+                    var lck = new object();
                     Action<MTable> funcTable = (t) =>
                     {
 
-                        result.TableList.Add(t);
+                        try
+                        {
+                            lock (lck)
+                            {
+                                result.TableList.Add(t);
+                            }
 
-                        t.ColumnList.AddRange(columnList.Where(c => c.TableKey == t.TableKey));
+                            t.ColumnList.AddRange(columnList.Where(c => c.TableKey == t.TableKey));
 
-                        t.IdxList.AddRange(idxList.Where(c => c.TableKey == t.TableKey));
+                            t.IdxList.AddRange(idxList.Where(c => c.TableKey == t.TableKey));
 
-                        t.FkList.AddRange(fkList.Where(c => c.TableKey == t.TableKey));
+                            t.FkList.AddRange(fkList.Where(c => c.TableKey == t.TableKey));
 
-                        var pkCol = t.ColumnList.FirstOrDefault(c => c.ordinal_position == 1);
-                        if (pkCol != null)
-                            pkCol.IsPrimaryKey = true;
-
+                            var pkCol = t.ColumnList.FirstOrDefault(c => c.ordinal_position == 1);
+                            if (pkCol != null)
+                                pkCol.IsPrimaryKey = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.TraceInformation(ex.Message);
+                        }
                     };
 
                     Parallel.ForEach(tableList, funcTable);
 
                 }// using
+
+                result.TableList = result.TableList.OrderBy(c => c.TableKey).ToList();
 
                 CopyTableList(ref result.TableList, ref _tableList);
                 _tableListCreateTime = DateTime.Now;
@@ -146,13 +163,9 @@ namespace MsSqlMetadataLoader
             if (dest == null)
                 dest = new List<MTable>();
             dest.Clear();
+            var list = dest;
 
-            foreach (var t in source)
-            {
-                var tn = new MTable();
-                tn.CopyFrom(t);
-                dest.Add(tn);
-            }
+            source.ForEach(t => { list.Add(new MTable(t)); });
         }
 
 

@@ -93,9 +93,18 @@ namespace MsSqlMetadataLoader.Test2
         public List<string> AddAttrList = new List<string>();
     }
 
-    public class ColumnAddAttributes
+    public class ColumnAddAttributes: ICloneable
     {
         public List<string> AddAttrList = new List<string>();
+
+        public object Clone()
+        {
+            var result = new ColumnAddAttributes();
+
+            AddAttrList.ForEach(s => result.AddAttrList.Add(s));
+
+            return result;
+        }
     }
 
     public class GenerationConfig

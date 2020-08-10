@@ -156,6 +156,7 @@ namespace MsSqlMetadataLoader
                 PropType += "?";
 
             TableKey = $"{table_catalog}.{table_schema}.{table_name}";
+
         }
 
         public void CopyFrom(MColumn c)
@@ -186,6 +187,11 @@ namespace MsSqlMetadataLoader
             SqlDbType = c.SqlDbType;
 
             TableKey = $"{table_catalog}.{table_schema}.{table_name}";
+
+            if (c.Tag is ICloneable tag)
+            {
+                Tag = tag.Clone();
+            }
         }
     }
 }
