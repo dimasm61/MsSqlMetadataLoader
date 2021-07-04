@@ -16,7 +16,7 @@ namespace MsSqlMetadataLoader
         public List<MTable> TableList = new List<MTable>();
 
 
-        public DataTable Tables = null;
+        public DataTable Tables;
 
         private static readonly object _lck = new object();
 
@@ -43,27 +43,27 @@ namespace MsSqlMetadataLoader
 
                     // tables
                     var tables = conn.GetSchema("Tables", new string[] { null, null, null, null });
-                    var tableList = tables.AsEnumerable().Select(c => new MTable(c)).ToList();
+                    var tableList = (from DataRow table in tables.Rows select new MTable(table)).ToList();
 
-                    if(tables.Rows.Count != tableList.Count)
-                    {
-                        var s = 1;
-                    }
+                    // if(tables.Rows.Count != tableList.Count)
+                    // {
+                    //     var s = 1;
+                    // }
 
                     result.Tables = tables;
 
                     // columns
                     var columns = conn.GetSchema("Columns", new string[] { null, null, null });
-                    var columnList = columns.AsEnumerable().Select(c => new MColumn(c)).ToList();
+                    var columnList = (from DataRow column in columns.Rows select new MColumn(column)).ToList();
 
                     // indexes
                     var idxColumns = conn.GetSchema("IndexColumns", new string[] { null, null, null });
-                    var idxList = idxColumns.AsEnumerable().Select(c => new MIndex(c)).ToList();
+                    var idxList = (from DataRow index in idxColumns.Rows select new MIndex(index)).ToList();
 
                     // constraints
                     var foreignKeys = conn.GetSchema("ForeignKeys", new string[] { null, null, null, null });
-                    var fkList = foreignKeys.AsEnumerable().Select(c => new MForeignKey(c)).ToList();
-
+                    var fkList = (from DataRow fKey in foreignKeys.Rows select new MForeignKey(fKey)).ToList();
+                    
                     // column descriptions
                     var commentList = GetColumnComments(conn);
 

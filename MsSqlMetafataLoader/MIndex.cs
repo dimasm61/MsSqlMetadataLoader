@@ -28,13 +28,13 @@
 
         public MIndex(System.Data.DataRow dataRow)
         {
-            ToStr(dataRow, "constraint_catalog", ref constraint_catalog);
-            ToStr(dataRow, "constraint_schema ", ref constraint_schema );
-            ToStr(dataRow, "constraint_name   ", ref constraint_name   );
-            ToStr(dataRow, "table_catalog     ", ref table_catalog     );
-            ToStr(dataRow, "table_schema      ", ref table_schema      );
-            ToStr(dataRow, "table_name        ", ref table_name        );
-            ToStr(dataRow, "column_name       ", ref column_name       );
+            Parse(dataRow, "constraint_catalog", ref constraint_catalog);
+            Parse(dataRow, "constraint_schema ", ref constraint_schema );
+            Parse(dataRow, "constraint_name   ", ref constraint_name   );
+            Parse(dataRow, "table_catalog     ", ref table_catalog     );
+            Parse(dataRow, "table_schema      ", ref table_schema      );
+            Parse(dataRow, "table_name        ", ref table_name        );
+            Parse(dataRow, "column_name       ", ref column_name       );
 
             TableKey = $"{table_catalog}.{table_schema}.{table_name}";
         }

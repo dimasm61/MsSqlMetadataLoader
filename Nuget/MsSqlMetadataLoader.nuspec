@@ -13,7 +13,8 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Sql server metadata loader (talbles/columns). Metadata can use for T4 class generator</description>
         <releaseNotes>
-            Fix error. Sometimes lib had read not all tables. Example of use: https://github.com/dimasm61/MsSqlMetadataLoader/blob/master/MsSqlMetadataLoader.Test2/MyProjectDbMetadataWripper.cs
+            Fix error. Sometimes lib had read not all tables. 
+            Example of use: https://github.com/dimasm61/MsSqlMetadataLoader/blob/master/MsSqlMetadataLoader.Test2/MyProjectDbMetadataWripper.cs
         </releaseNotes>
         <copyright>free</copyright>
         <tags>mssql T4</tags>

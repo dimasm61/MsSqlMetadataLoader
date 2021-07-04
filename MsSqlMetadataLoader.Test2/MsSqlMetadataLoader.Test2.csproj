@@ -91,6 +91,10 @@
       <Project>{f64d6436-cf7c-4430-a982-38dca14f75d1}</Project>
       <Name>MsSqlMetadataLoader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MsSqlMetafataLoader\MsSqlMetafataLoader.csproj">
+      <Project>{13a5556b-1387-4187-8b85-f7dd1898220e}</Project>
+      <Name>MsSqlMetafataLoader</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -73,25 +73,25 @@ namespace MsSqlMetadataLoader
 
         public MColumn(System.Data.DataRow dataRow)
         {
-            ToStr(dataRow, "table_catalog            ", ref table_catalog); //  String  
-            ToStr(dataRow, "table_schema             ", ref table_schema); //  String  
-            ToStr(dataRow, "table_name               ", ref table_name); //  String  
-            ToStr(dataRow, "column_name              ", ref column_name); //  String  
-            ToInt(dataRow, "ordinal_position         ", ref ordinal_position); //  Int16   
-            ToStr(dataRow, "column_default           ", ref column_default); //  String  
-            ToStr(dataRow, "is_nullable              ", ref is_nullable); //  String N
-            ToStr(dataRow, "data_type                ", ref data_type); //  String  
-            ToInt(dataRow, "character_maximum_length ", ref character_maximum_length); //  Int32   
-            ToInt(dataRow, "character_octet_length   ", ref character_octet_length); //  Int32   
-            ToInt(dataRow, "numeric_precision        ", ref numeric_precision); //  Unsigned
-            ToInt(dataRow, "numeric_precision_radix  ", ref numeric_precision_radix); //  Int16   
-            ToInt(dataRow, "numeric_scale            ", ref numeric_scale); //  Int32   
-            ToInt(dataRow, "datetime_precision       ", ref datetime_precision); //  Int16   
-            ToStr(dataRow, "character_set_catalog    ", ref character_set_catalog); //  String  
-            ToStr(dataRow, "character_set_schema     ", ref character_set_schema); //  String  
-            ToStr(dataRow, "character_set_name       ", ref character_set_name); //  String  
-            ToStr(dataRow, "collation_catalog        ", ref collation_catalog); //  String  
-            ToInt(dataRow, "is_filestream            ", ref is_filestream); //  String  
+            Parse(dataRow, "table_catalog            ", ref table_catalog); //  String  
+            Parse(dataRow, "table_schema             ", ref table_schema); //  String  
+            Parse(dataRow, "table_name               ", ref table_name); //  String  
+            Parse(dataRow, "column_name              ", ref column_name); //  String  
+            Parse(dataRow, "ordinal_position         ", ref ordinal_position); //  Int16   
+            Parse(dataRow, "column_default           ", ref column_default); //  String  
+            Parse(dataRow, "is_nullable              ", ref is_nullable); //  String N
+            Parse(dataRow, "data_type                ", ref data_type); //  String  
+            Parse(dataRow, "character_maximum_length ", ref character_maximum_length); //  Int32   
+            Parse(dataRow, "character_octet_length   ", ref character_octet_length); //  Int32   
+            Parse(dataRow, "numeric_precision        ", ref numeric_precision); //  Unsigned
+            Parse(dataRow, "numeric_precision_radix  ", ref numeric_precision_radix); //  Int16   
+            Parse(dataRow, "numeric_scale            ", ref numeric_scale); //  Int32   
+            Parse(dataRow, "datetime_precision       ", ref datetime_precision); //  Int16   
+            Parse(dataRow, "character_set_catalog    ", ref character_set_catalog); //  String  
+            Parse(dataRow, "character_set_schema     ", ref character_set_schema); //  String  
+            Parse(dataRow, "character_set_name       ", ref character_set_name); //  String  
+            Parse(dataRow, "collation_catalog        ", ref collation_catalog); //  String  
+            Parse(dataRow, "is_filestream            ", ref is_filestream); //  String  
 
             switch (data_type)
             {

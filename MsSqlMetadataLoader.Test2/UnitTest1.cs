@@ -10,11 +10,12 @@ namespace MsSqlMetadataLoader.Test2
     [TestClass]
     public class UnitTest1
     {
-
+        private static string ConnStr = "Server=localhost\\EX2017;Database=VTSDB3;Trusted_Connection=True;";
         [TestMethod]
         public void LoadMetadataTest()
         {
-            var dbMeta = DbMsSqlMetadata.Load("Server=localhost\\EX2017;Database=VTSDB3;Trusted_Connection=True;", 0.1);
+            
+            var dbMeta = DbMsSqlMetadata.Load(ConnStr, 0.1);
             Assert.AreEqual(dbMeta.TableList.Any(), true);
         }
 
@@ -28,7 +29,7 @@ namespace MsSqlMetadataLoader.Test2
             var rs = true;
             while (cn++ < 20)
             {
-                var dbMeta = DbMsSqlMetadata.Load("Server=localhost\\EX2017;Database=VTSDB3;Trusted_Connection=True;", 0);
+                var dbMeta = DbMsSqlMetadata.Load(ConnStr, 0);
 
                 if (tableCount == -1)
                 {
